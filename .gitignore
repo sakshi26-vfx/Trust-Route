@@ -1,0 +1,11 @@
+/target
+/target_custom
+/frontend/node_modules
+/frontend/dist
+.env
+.env.local
+node_modules
+dist
+.DS_Store
+.idea
+.vscode
