@@ -81,6 +81,11 @@ export default function App() {
     setIsConnecting(false);
   };
 
+  const handleDisconnect = () => {
+    setWalletAddress(null);
+    setBuyer("");
+  };
+
   const handleAddMilestone = () => {
     setMilestones([...milestones, { amount: "", description: "" }]);
   };
@@ -228,14 +233,24 @@ export default function App() {
           </div>
         </div>
 
-        <button
-          onClick={handleConnectWallet}
-          disabled={isConnecting}
-          className="flex items-center space-x-2 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-medium text-sm px-4 py-2.5 rounded-xl shadow-lg shadow-indigo-600/10 transition duration-200"
-        >
-          <User className="h-4 w-4" />
-          <span>{walletAddress ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}` : "Connect Freighter"}</span>
-        </button>
+        {walletAddress ? (
+          <button
+            onClick={handleDisconnect}
+            className="flex items-center space-x-2 bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-white/10 font-medium text-sm px-4 py-2.5 rounded-xl transition duration-200"
+          >
+            <User className="h-4 w-4 text-indigo-400" />
+            <span>Disconnect [{walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}]</span>
+          </button>
+        ) : (
+          <button
+            onClick={handleConnectWallet}
+            disabled={isConnecting}
+            className="flex items-center space-x-2 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-medium text-sm px-4 py-2.5 rounded-xl shadow-lg shadow-indigo-600/10 transition duration-200"
+          >
+            <User className="h-4 w-4" />
+            <span>Connect Freighter</span>
+          </button>
+        )}
       </header>
 
       {/* Main Layout Grid */}
