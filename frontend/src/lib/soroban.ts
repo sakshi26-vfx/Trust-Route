@@ -17,8 +17,8 @@ export const STELLAR_TESTNET_RPC = "https://soroban-testnet.stellar.org";
 export const NATIVE_TOKEN_CONTRACT = "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC";
 
 export const getContractConfig = () => {
-  const escrowId = localStorage.getItem("trustroute_escrow_id") || "CA3D5KRYM6CB7OWQ6TWYRR3Z4T7GNZLKERYNZGGA5SOAOPIFY6YQGAXE";
-  const routerId = localStorage.getItem("trustroute_router_id") || "CBH2W42YWRH4T727T4PZJTRQ4G3AZEZGB2RMQQVU2HHGCYSCW4QZ4L2";
+  const escrowId = localStorage.getItem("trustroute_escrow_id") || "CDXT2IWU2MSMSUUJ3QPFY44XM5MMXQC64RG44GH6ITFDKBBGXIWWPKMM";
+  const routerId = localStorage.getItem("trustroute_router_id") || "CBUQYDFIRQVPP7HCJXCEPSJIXYFM7H3G6A3BFF2G3OWNLEX36MD4LL33";
   const mode = localStorage.getItem("trustroute_network_mode") || "simulation";
   return { escrowId, routerId, mode };
 };
@@ -44,7 +44,7 @@ const INITIAL_ESCROWS: EscrowData[] = [
       { amount: "3000", released: false, description: "Backend API Integration" }
     ],
     releasedAmount: "2000",
-    router: "CBH2W42YWRH4T727T4PZJTRQ4G3AZEZGB2RMQQVU2HHGCYSCW4QZ4L2",
+    router: "CBUQYDFIRQVPP7HCJXCEPSJIXYFM7H3G6A3BFF2G3OWNLEX36MD4LL33",
     affiliate: "GAFFILIATE...789012",
     affiliateBps: 500,
   },
@@ -61,7 +61,7 @@ const INITIAL_ESCROWS: EscrowData[] = [
       { amount: "5000", released: false, description: "Frontend Integration" }
     ],
     releasedAmount: "0",
-    router: "CBH2W42YWRH4T727T4PZJTRQ4G3AZEZGB2RMQQVU2HHGCYSCW4QZ4L2",
+    router: "CBUQYDFIRQVPP7HCJXCEPSJIXYFM7H3G6A3BFF2G3OWNLEX36MD4LL33",
     affiliate: undefined,
     affiliateBps: 0,
   }
