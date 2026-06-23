@@ -21,12 +21,14 @@ import {
   getEscrows, 
   getEvents, 
   getBalances, 
-  createEscrowMock, 
-  depositMock, 
-  releaseMilestoneMock, 
-  requestRefundMock, 
-  disputeMock, 
-  resolveDisputeMock 
+  createEscrow, 
+  deposit, 
+  releaseMilestone, 
+  requestRefund, 
+  dispute, 
+  resolveDispute,
+  getContractConfig,
+  setContractConfig
 } from "./lib/soroban";
 import { connectWallet } from "./lib/freighter";
 
@@ -54,12 +56,39 @@ export default function App() {
   // Selected Escrow details
   const [selectedEscrow, setSelectedEscrow] = useState<EscrowData | null>(null);
 
-  // Sync data from localStorage
-  const syncData = () => {
-    setEscrows(getEscrows());
-    setEvents(getEvents());
-    setBalances(getBalances());
+  // On-chain Network Settings State
+  const [networkMode, setNetworkMode] = useState<"simulation" | "testnet">("simulation");
+  const [showSettings, setShowSettings] = useState(false);
+  const [txStatusText, setTxStatusText] = useState<string | null>(null);
+
+  // Settings Panel Inputs
+  const [inputEscrowId, setInputEscrowId] = useState("");
+  const [inputRouterId, setInputRouterId] = useState("");
+  const [inputMode, setInputMode] = useState<"simulation" | "testnet">("simulation");
+
+  // Sync data from localStorage or Testnet RPC
+  const syncData = async () => {
+    try {
+      const escrowsData = await getEscrows();
+      setEscrows(escrowsData);
+      const eventsData = await getEvents();
+      setEvents(eventsData);
+      const balancesData = await getBalances(walletAddress);
+      setBalances(balancesData);
+    } catch (e) {
+      console.error("Failed to sync data:", e);
+    }
   };
+
+  // Mount config initializer
+  useEffect(() => {
+    const config = getContractConfig();
+    setNetworkMode(config.mode as "simulation" | "testnet");
+    
+    setInputMode(config.mode as "simulation" | "testnet");
+    setInputEscrowId(config.escrowId);
+    setInputRouterId(config.routerId);
+  }, []);
 
   useEffect(() => {
     syncData();
@@ -67,7 +96,13 @@ export default function App() {
     if (walletAddress) {
       setBuyer(walletAddress);
     }
-  }, [walletAddress]);
+  }, [walletAddress, networkMode]);
+
+  const handleSaveConfig = () => {
+    setContractConfig(inputEscrowId, inputRouterId, inputMode);
+    setNetworkMode(inputMode);
+    setShowSettings(false);
+  };
 
   const handleConnectWallet = async () => {
     setIsConnecting(true);
@@ -100,7 +135,7 @@ export default function App() {
     setMilestones(updated);
   };
 
-  const handleCreateEscrow = (e: React.FormEvent) => {
+  const handleCreateEscrow = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!buyer || !seller || !amount) {
       alert("Please fill out all required fields.");
@@ -119,73 +154,128 @@ export default function App() {
       }
     }
 
-    createEscrowMock(
-      buyer,
-      seller,
-      amount,
-      parseInt(deadlineDays),
-      activeMilestones,
-      affiliate || undefined,
-      parseInt(affiliateBps)
-    );
+    setTxStatusText("Initializing escrow setup...");
+    try {
+      const txHash = await createEscrow(
+        buyer,
+        seller,
+        amount,
+        parseInt(deadlineDays),
+        activeMilestones,
+        affiliate || undefined,
+        parseInt(affiliateBps),
+        setTxStatusText
+      );
 
-    // Reset Form
-    setBuyer(walletAddress || "");
-    setSeller("");
-    setAmount("");
-    setDeadlineDays("3");
-    setAffiliate("");
-    setAffiliateBps("0");
-    setMilestones([{ amount: "", description: "" }]);
+      if (txHash) {
+        // Reset Form
+        setBuyer(walletAddress || "");
+        setSeller("");
+        setAmount("");
+        setDeadlineDays("3");
+        setAffiliate("");
+        setAffiliateBps("0");
+        setMilestones([{ amount: "", description: "" }]);
 
-    syncData();
-    setActiveTab("dashboard");
+        await syncData();
+        setActiveTab("dashboard");
+      }
+    } catch (err: any) {
+      console.error(err);
+    } finally {
+      setTxStatusText(null);
+    }
   };
 
   // Actions
-  const handleDeposit = (id: number) => {
-    if (depositMock(id)) {
-      syncData();
-      if (selectedEscrow?.id === id) {
-        setSelectedEscrow(getEscrows().find(e => e.id === id) || null);
+  const handleDeposit = async (id: number) => {
+    setTxStatusText("Initiating deposit transaction...");
+    try {
+      const success = await deposit(id, walletAddress || "", setTxStatusText);
+      if (success) {
+        await syncData();
+        const escrowsList = await getEscrows();
+        if (selectedEscrow?.id === id) {
+          setSelectedEscrow(escrowsList.find(e => e.id === id) || null);
+        }
       }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setTxStatusText(null);
     }
   };
 
-  const handleReleaseMilestone = (escrowId: number, milestoneIdx: number) => {
-    if (releaseMilestoneMock(escrowId, milestoneIdx)) {
-      syncData();
-      if (selectedEscrow?.id === escrowId) {
-        setSelectedEscrow(getEscrows().find(e => e.id === escrowId) || null);
+  const handleReleaseMilestone = async (escrowId: number, milestoneIdx: number) => {
+    setTxStatusText("Initiating milestone release transaction...");
+    try {
+      const success = await releaseMilestone(escrowId, milestoneIdx, walletAddress || "", setTxStatusText);
+      if (success) {
+        await syncData();
+        const escrowsList = await getEscrows();
+        if (selectedEscrow?.id === escrowId) {
+          setSelectedEscrow(escrowsList.find(e => e.id === escrowId) || null);
+        }
       }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setTxStatusText(null);
     }
   };
 
-  const handleRefund = (id: number) => {
-    if (requestRefundMock(id)) {
-      syncData();
-      if (selectedEscrow?.id === id) {
-        setSelectedEscrow(getEscrows().find(e => e.id === id) || null);
+  const handleRefund = async (id: number) => {
+    setTxStatusText("Initiating refund transaction...");
+    try {
+      const success = await requestRefund(id, walletAddress || "", setTxStatusText);
+      if (success) {
+        await syncData();
+        const escrowsList = await getEscrows();
+        if (selectedEscrow?.id === id) {
+          setSelectedEscrow(escrowsList.find(e => e.id === id) || null);
+        }
       }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setTxStatusText(null);
     }
   };
 
-  const handleDispute = (id: number) => {
+  const handleDispute = async (id: number) => {
+    setTxStatusText("Initiating dispute transaction...");
     const caller = walletAddress || "GBUYER...123456";
-    if (disputeMock(id, caller)) {
-      syncData();
-      if (selectedEscrow?.id === id) {
-        setSelectedEscrow(getEscrows().find(e => e.id === id) || null);
+    try {
+      const success = await dispute(id, caller, setTxStatusText);
+      if (success) {
+        await syncData();
+        const escrowsList = await getEscrows();
+        if (selectedEscrow?.id === id) {
+          setSelectedEscrow(escrowsList.find(e => e.id === id) || null);
+        }
       }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setTxStatusText(null);
     }
   };
 
-  const handleResolveDispute = (id: number, favorSeller: boolean) => {
-    if (resolveDisputeMock(id, favorSeller)) {
-      syncData();
-      if (selectedEscrow?.id === id) {
-        setSelectedEscrow(getEscrows().find(e => e.id === id) || null);
+  const handleResolveDispute = async (id: number, favorSeller: boolean) => {
+    setTxStatusText("Initiating arbitrage resolution...");
+    try {
+      const success = await resolveDispute(id, favorSeller, walletAddress || "", setTxStatusText);
+      if (success) {
+        await syncData();
+        const escrowsList = await getEscrows();
+        if (selectedEscrow?.id === id) {
+          setSelectedEscrow(escrowsList.find(e => e.id === id) || null);
+        }
       }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setTxStatusText(null);
     }
   };
 
@@ -232,6 +322,27 @@ export default function App() {
             <span className="text-sm font-semibold text-emerald-400">{balances.platform?.toLocaleString()} XLM</span>
           </div>
         </div>
+
+        {/* Network Mode Badge */}
+        <div className="flex items-center space-x-2 bg-navy-800/50 p-2.5 rounded-xl border border-white/5 mr-4">
+          <span className={`inline-block w-2 h-2 rounded-full ${networkMode === "testnet" ? "bg-emerald-500 animate-pulse" : "bg-slate-500"}`}></span>
+          <span className="text-xs font-semibold text-slate-200 uppercase">{networkMode === "testnet" ? "Stellar Testnet" : "Simulation"}</span>
+        </div>
+
+        {/* Settings Gear Button */}
+        <button
+          onClick={() => {
+            const config = getContractConfig();
+            setInputMode(config.mode as "simulation" | "testnet");
+            setInputEscrowId(config.escrowId);
+            setInputRouterId(config.routerId);
+            setShowSettings(true);
+          }}
+          className="p-2.5 text-slate-400 hover:text-white bg-navy-800 hover:bg-navy-750 rounded-xl border border-white/5 transition duration-200 mr-4"
+          title="Network Configuration"
+        >
+          <Settings className="h-4 w-4" />
+        </button>
 
         {walletAddress ? (
           <button
@@ -782,6 +893,97 @@ export default function App() {
 
         </main>
       </div>
+
+      {/* Settings Configuration Modal */}
+      {showSettings && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-navy-950/80 backdrop-blur-sm">
+          <div className="w-full max-w-md p-6 bg-navy-900 border border-white/10 rounded-2xl shadow-2xl space-y-4">
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-bold text-white flex items-center space-x-2">
+                <Settings className="h-5 w-5 text-indigo-400" />
+                <span>Network & Contract Settings</span>
+              </h3>
+              <button 
+                onClick={() => setShowSettings(false)}
+                className="text-slate-400 hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+            
+            <div className="space-y-4 py-2">
+              <div className="space-y-2">
+                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Network Execution Mode</label>
+                <div className="grid grid-cols-2 gap-2 bg-navy-950 p-1 rounded-xl">
+                  <button
+                    type="button"
+                    onClick={() => setInputMode("simulation")}
+                    className={`py-2 text-xs font-bold rounded-lg transition ${inputMode === "simulation" ? "bg-indigo-600 text-white shadow" : "text-slate-400 hover:text-slate-200"}`}
+                  >
+                    Simulation (Mock)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setInputMode("testnet")}
+                    className={`py-2 text-xs font-bold rounded-lg transition ${inputMode === "testnet" ? "bg-indigo-600 text-white shadow" : "text-slate-400 hover:text-slate-200"}`}
+                  >
+                    Stellar Testnet (Live)
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Escrow Contract ID</label>
+                <input
+                  type="text"
+                  value={inputEscrowId}
+                  onChange={(e) => setInputEscrowId(e.target.value)}
+                  placeholder="e.g. CA3D5KRYM6CB..."
+                  className="w-full bg-navy-950 border border-white/10 rounded-xl px-3 py-2 text-sm text-slate-200 font-mono focus:outline-none focus:border-indigo-500"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Router Contract ID</label>
+                <input
+                  type="text"
+                  value={inputRouterId}
+                  onChange={(e) => setInputRouterId(e.target.value)}
+                  placeholder="e.g. CBH2W42YWRH..."
+                  className="w-full bg-navy-950 border border-white/10 rounded-xl px-3 py-2 text-sm text-slate-200 font-mono focus:outline-none focus:border-indigo-500"
+                />
+              </div>
+            </div>
+
+            <div className="flex space-x-2 pt-2">
+              <button
+                onClick={() => setShowSettings(false)}
+                className="flex-1 bg-navy-800 hover:bg-navy-750 text-slate-300 font-medium text-sm py-2.5 rounded-xl border border-white/5 transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveConfig}
+                className="flex-1 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-medium text-sm py-2.5 rounded-xl shadow-lg transition"
+              >
+                Save Config
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Transaction Status Overlay */}
+      {txStatusText && (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-navy-950/80 backdrop-blur-md">
+          <div className="flex flex-col items-center space-y-4 max-w-md text-center p-8 bg-navy-900/90 rounded-2xl border border-white/10 shadow-2xl">
+            <RefreshCcw className="h-10 w-10 text-indigo-400 animate-spin" />
+            <h3 className="text-lg font-bold text-white">Executing Soroban Operation</h3>
+            <p className="text-sm text-slate-300 font-medium">{txStatusText}</p>
+            <p className="text-xs text-slate-500">Please check your Freighter Wallet extension if a signature prompt does not appear.</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
