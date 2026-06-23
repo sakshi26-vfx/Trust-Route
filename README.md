@@ -9,6 +9,21 @@ Traditional digital freelancing platforms and peer-to-peer marketplaces charge h
 
 ---
 
+## ✨ Key Features Overview
+
+* **🔒 Milestoned Escrow Agreement**: Buyers can create structured deals specifying total payouts divided into custom milestones. Funds are securely locked on-chain and released only upon successful milestone approval.
+* **💸 Atomic Payout Routing & Splitting**: Payouts are routed through a Payment Router contract that splits funds atomically:
+  * **Seller Share**: The bulk of the payout.
+  * **Platform Fee**: A configurable platform fee in basis points (e.g., 250 BPS / 2.5%).
+  * **Affiliate Referral Split**: Optional fee routed directly to an affiliate/partner address.
+* **⚖️ Dispute Arbitration Console**: Integrates a mediation flow where an designated arbiter can resolve escrow disputes, routing funds to either the buyer or the seller based on resolution outcomes.
+* **🔄 Dual-Mode Engine (Simulation & Testnet)**:
+  * **Simulation Mode**: Uses the browser's local state storage for rapid demoing and offline testing.
+  * **Stellar Testnet Mode**: Integrates directly with the Soroban Testnet network, using **Freighter Wallet** to sign and broadcast transaction footprints.
+* **⚡ Real-time Activity Feed**: Actively polls and parses ledger event logs to stream live contract updates directly inside the UI.
+
+---
+
 ## 🏗️ Architecture Design
 
 ```
