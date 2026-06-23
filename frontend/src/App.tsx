@@ -224,12 +224,12 @@ export default function App() {
         <div className="hidden md:flex items-center space-x-6 mr-4 bg-navy-800/40 p-2.5 rounded-xl border border-white/5">
           <div className="text-right">
             <span className="block text-[10px] uppercase font-bold text-slate-400">Escrow Balance</span>
-            <span className="text-sm font-semibold text-indigo-400">{balances.buyer?.toLocaleString()} USDC</span>
+            <span className="text-sm font-semibold text-indigo-400">{balances.buyer?.toLocaleString()} XLM</span>
           </div>
           <div className="h-6 w-px bg-white/10"></div>
           <div className="text-right">
             <span className="block text-[10px] uppercase font-bold text-slate-400">Platform Fees</span>
-            <span className="text-sm font-semibold text-emerald-400">{balances.platform?.toLocaleString()} USDC</span>
+            <span className="text-sm font-semibold text-emerald-400">{balances.platform?.toLocaleString()} XLM</span>
           </div>
         </div>
 
@@ -365,11 +365,11 @@ export default function App() {
                         <div className="space-y-2">
                           <div className="flex justify-between">
                             <span className="text-sm text-slate-400">Total Amount:</span>
-                            <span className="text-sm font-semibold text-slate-200">{escrow.amount} USDC</span>
+                            <span className="text-sm font-semibold text-slate-200">{escrow.amount} XLM</span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-sm text-slate-400">Released:</span>
-                            <span className="text-sm font-semibold text-emerald-400">{escrow.releasedAmount} USDC</span>
+                            <span className="text-sm font-semibold text-emerald-400">{escrow.releasedAmount} XLM</span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-sm text-slate-400">Seller:</span>
@@ -470,7 +470,7 @@ export default function App() {
                   <div className="flex justify-between text-sm">
                     <span className="text-slate-400">Releases Payout Progress</span>
                     <span className="font-semibold text-slate-200">
-                      {selectedEscrow.releasedAmount} / {selectedEscrow.amount} USDC ({((parseFloat(selectedEscrow.releasedAmount) / parseFloat(selectedEscrow.amount)) * 100).toFixed(0)}%)
+                      {selectedEscrow.releasedAmount} / {selectedEscrow.amount} XLM ({((parseFloat(selectedEscrow.releasedAmount) / parseFloat(selectedEscrow.amount)) * 100).toFixed(0)}%)
                     </span>
                   </div>
                   <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
@@ -502,7 +502,7 @@ export default function App() {
                           )}
                           <div>
                             <span className="block font-semibold text-sm text-slate-200">{ms.description}</span>
-                            <span className="text-xs text-slate-400">{ms.amount} USDC</span>
+                            <span className="text-xs text-slate-400">{ms.amount} XLM</span>
                           </div>
                         </div>
 
@@ -564,7 +564,7 @@ export default function App() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-xs font-semibold text-slate-300 block">Total Escrow Amount (USDC)</label>
+                    <label className="text-xs font-semibold text-slate-300 block">Total Escrow Amount (XLM)</label>
                     <input
                       type="number"
                       value={amount}
@@ -732,8 +732,8 @@ export default function App() {
                         <div className="flex justify-between items-start">
                           <div>
                             <span className="text-xs font-bold text-slate-400">DISPUTED AGREEMENT #{escrow.id}</span>
-                            <span className="block text-sm font-semibold text-white mt-1">Total Amount: {escrow.amount} USDC</span>
-                            <span className="block text-xs text-slate-400">Released thus far: {escrow.releasedAmount} USDC</span>
+                            <span className="block text-sm font-semibold text-white mt-1">Total Amount: {escrow.amount} XLM</span>
+                            <span className="block text-xs text-slate-400">Released thus far: {escrow.releasedAmount} XLM</span>
                           </div>
                           
                           {/* Resolution actions */}

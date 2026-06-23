@@ -14,7 +14,7 @@ const INITIAL_ESCROWS: EscrowData[] = [
     id: 1,
     buyer: "GBUYER...123456",
     seller: "GSELLER...ABCDEF",
-    token: "USDC (mock)",
+    token: "XLM (mock)",
     amount: "5000",
     deadline: Math.floor(Date.now() / 1000) + 86400 * 3, // 3 days from now
     status: EscrowStatus.Active,
@@ -31,7 +31,7 @@ const INITIAL_ESCROWS: EscrowData[] = [
     id: 2,
     buyer: "GDEMO...BUYER",
     seller: "GDEMO...SELLER",
-    token: "USDC (mock)",
+    token: "XLM (mock)",
     amount: "10000",
     deadline: Math.floor(Date.now() / 1000) - 3600, // Expired 1 hour ago
     status: EscrowStatus.Active,
@@ -52,28 +52,28 @@ const INITIAL_EVENTS: EventLog[] = [
     type: "created",
     timestamp: Date.now() - 3600000 * 2,
     txHash: "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890",
-    details: "Escrow #1 created by buyer GBUYER...123456 with amount 5000 USDC"
+    details: "Escrow #1 created by buyer GBUYER...123456 with amount 5000 XLM"
   },
   {
     id: "evt_2",
     type: "deposit",
     timestamp: Date.now() - 3600000 * 1.9,
     txHash: "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890",
-    details: "Buyer GBUYER...123456 deposited 5000 USDC into Escrow #1"
+    details: "Buyer GBUYER...123456 deposited 5000 XLM into Escrow #1"
   },
   {
     id: "evt_3",
     type: "released",
     timestamp: Date.now() - 3600000 * 0.5,
     txHash: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
-    details: "Milestone 'UI Mockup Designs' (2000 USDC) released for Escrow #1"
+    details: "Milestone 'UI Mockup Designs' (2000 XLM) released for Escrow #1"
   },
   {
     id: "evt_4",
     type: "routed",
     timestamp: Date.now() - 3600000 * 0.5,
     txHash: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
-    details: "Router split 2000 USDC: 1850 USDC to Seller, 50 USDC (2.5%) to Platform, 100 USDC (5%) to Affiliate"
+    details: "Router split 2000 XLM: 1850 XLM to Seller, 50 XLM (2.5%) to Platform, 100 XLM (5%) to Affiliate"
   }
 ];
 
@@ -141,7 +141,7 @@ export const createEscrowMock = (
     id: nextId,
     buyer,
     seller,
-    token: "USDC (mock)",
+    token: "XLM (mock)",
     amount,
     deadline: Math.floor(Date.now() / 1000) + 86400 * deadlineDays,
     status: EscrowStatus.Pending,
@@ -163,7 +163,7 @@ export const createEscrowMock = (
     type: "created",
     timestamp: Date.now(),
     txHash,
-    details: `Escrow #${nextId} created by buyer ${buyer.slice(0, 8)}... with amount ${amount} USDC`
+    details: `Escrow #${nextId} created by buyer ${buyer.slice(0, 8)}... with amount ${amount} XLM`
   });
   localStorage.setItem("trustroute_events", JSON.stringify(events));
 
@@ -197,7 +197,7 @@ export const depositMock = (id: number): boolean => {
     type: "deposit",
     timestamp: Date.now(),
     txHash,
-    details: `Buyer ${escrow.buyer.slice(0, 8)}... deposited ${escrow.amount} USDC into Escrow #${id}`
+    details: `Buyer ${escrow.buyer.slice(0, 8)}... deposited ${escrow.amount} XLM into Escrow #${id}`
   });
   localStorage.setItem("trustroute_events", JSON.stringify(events));
 
@@ -252,7 +252,7 @@ export const releaseMilestoneMock = (escrowId: number, milestoneIdx: number): bo
     type: "released",
     timestamp: Date.now(),
     txHash,
-    details: `Milestone '${milestone.description}' (${milestone.amount} USDC) released for Escrow #${escrowId}`
+    details: `Milestone '${milestone.description}' (${milestone.amount} XLM) released for Escrow #${escrowId}`
   });
 
   events.unshift({
@@ -260,7 +260,7 @@ export const releaseMilestoneMock = (escrowId: number, milestoneIdx: number): bo
     type: "routed",
     timestamp: Date.now(),
     txHash,
-    details: `Router split ${milestone.amount} USDC: ${sellerAmount.toFixed(2)} USDC to Seller, ${platformFee.toFixed(2)} USDC (2.5%) to Platform${affiliateFee > 0 ? `, ${affiliateFee.toFixed(2)} USDC (${escrow.affiliateBps / 100}%) to Affiliate` : ""}`
+    details: `Router split ${milestone.amount} XLM: ${sellerAmount.toFixed(2)} XLM to Seller, ${platformFee.toFixed(2)} XLM (2.5%) to Platform${affiliateFee > 0 ? `, ${affiliateFee.toFixed(2)} XLM (${escrow.affiliateBps / 100}%) to Affiliate` : ""}`
   });
 
   localStorage.setItem("trustroute_events", JSON.stringify(events));
@@ -302,7 +302,7 @@ export const requestRefundMock = (id: number): boolean => {
     type: "refund",
     timestamp: Date.now(),
     txHash,
-    details: `Buyer claimed refund of ${remaining} USDC from Escrow #${id} after deadline`
+    details: `Buyer claimed refund of ${remaining} XLM from Escrow #${id} after deadline`
   });
   localStorage.setItem("trustroute_events", JSON.stringify(events));
 
