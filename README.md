@@ -123,3 +123,10 @@ This script will:
 5. Print out the deployed Contract IDs.
 
 Copy the outputted Contract IDs into [soroban.ts](file:///d:/stellar%20TrustRoute/frontend/src/lib/soroban.ts) to interact with them on-chain.
+
+### 🌐 Live Testnet Contract Addresses
+
+- **Router Contract ID**: `CBUQYDFIRQVPP7HCJXCEPSJIXYFM7H3G6A3BFF2G3OWNLEX36MD4LL33`
+- **Escrow Contract ID**: `CDXT2IWU2MSMSUUJ3QPFY44XM5MMXQC64RG44GH6ITFDKBBGXIWWPKMM`
+- **Arbiter Admin Address**: `GA4VG5HLJKMNB5D4SX5PVCUTAJN7BE2XQMJGBPGJB5R2IIR5ZMMQOVDQ`
+
