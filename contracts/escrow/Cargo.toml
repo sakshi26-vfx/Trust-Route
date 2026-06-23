@@ -1,0 +1,16 @@
+[package]
+name = "trustroute-escrow"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+soroban-sdk = { version = "22.0.1" }
+# We will import the router client in tests / cross-contract call using client.
+# Or we can declare dependencies or import as client.
+
+[dev-dependencies]
+soroban-sdk = { version = "22.0.1", features = ["testutils"] }
+trustroute-router = { path = "../router" }
