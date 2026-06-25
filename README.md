@@ -4,6 +4,12 @@
 
 A production-grade, secure Decentralized Escrow and atomic Payment Router built on the **Stellar Soroban Smart Contract** ecosystem.
 
+## 🌐 Live Demo
+
+> ✨ **[https://trustroute-sakshi.vercel.app](https://trustroute-sakshi.vercel.app)**
+
+Deployed on **Vercel** under the `sakshi26-vfx` account. Connect your Freighter Wallet (configured for Stellar Testnet) and interact with our smart contracts in real-time!
+
 ## 📖 Problem Statement
 Traditional digital freelancing platforms and peer-to-peer marketplaces charge high intermediary fees (often 5% to 20%) and centralize transaction mediation. TrustRoute solves this by enforcing conditions trustlessly on-chain. Buyers deposit funds into an Escrow contract, which releases funds incrementally according to predefined milestones. Payouts are atomically processed via a Router contract, routing splits directly to the seller, a minimal platform fee, and optional affiliates.
 
@@ -139,9 +145,35 @@ This script will:
 
 Copy the outputted Contract IDs into [soroban.ts](file:///d:/stellar%20TrustRoute/frontend/src/lib/soroban.ts) to interact with them on-chain.
 
-### 🌐 Live Testnet Contract Addresses
+### 🌐 Live Testnet Contract Addresses & Interactions
 
-- **Router Contract ID**: `CBUQYDFIRQVPP7HCJXCEPSJIXYFM7H3G6A3BFF2G3OWNLEX36MD4LL33`
-- **Escrow Contract ID**: `CDXT2IWU2MSMSUUJ3QPFY44XM5MMXQC64RG44GH6ITFDKBBGXIWWPKMM`
-- **Arbiter Admin Address**: `GA4VG5HLJKMNB5D4SX5PVCUTAJN7BE2XQMJGBPGJB5R2IIR5ZMMQOVDQ`
+* **Router Contract ID**: `CBUQYDFIRQVPP7HCJXCEPSJIXYFM7H3G6A3BFF2G3OWNLEX36MD4LL33`
+* **Escrow Contract ID**: `CDXT2IWU2MSMSUUJ3QPFY44XM5MMXQC64RG44GH6ITFDKBBGXIWWPKMM`
+* **Arbiter Admin Address**: `GA4VG5HLJKMNB5D4SX5PVCUTAJN7BE2XQMJGBPGJB5R2IIR5ZMMQOVDQ`
+* **Contract Interaction Transaction Hash (Testnet)**: `2fb6942a997e6e7b1ad0bc1a35339cee261ae3e932cdda95c062dbb5e2c66fc8`
 
+---
+
+## 📸 Interface Preview & Submission Screenshots
+
+To satisfy the review requirements, here is the complete visual walkthrough of the application states:
+
+### 1. Mobile Responsive UI
+The dashboard layout adapts cleanly to fit mobile resolutions:
+![Mobile Responsive UI](./docs/mobile_ui.png)
+
+### 2. GitHub Actions CI/CD Pipeline Running
+Our workflow automatically validates the workspace smart contract tests on push:
+![CI/CD Pipeline](./docs/cicd_pipeline.png)
+
+### 3. Rust Unit Test Output (6 Passing Tests)
+Both contracts are validated by Cargo unit tests:
+![Cargo Test Output](./docs/test_output.png)
+
+---
+
+## 🎥 Interactive Demo Walkthrough Video
+
+Watch the complete interactive walk-through demonstrating escrow proposing, funding, router fee-splitting, and dispute resolution:
+
+![Interactive Walkthrough Demo](./docs/trustroute_demo_new_1782233064016.webp)
