@@ -162,7 +162,11 @@ To satisfy the review requirements, here is the complete visual walkthrough of t
 The dashboard layout adapts cleanly to fit mobile resolutions:
 ![Mobile Responsive UI](./docs/mobile_ui.png)
 
-### 2. Rust Unit Test Output (6 Passing Tests)
+### 2. GitHub Actions CI/CD Pipeline Running
+Our workflow automatically validates the workspace smart contract tests on push:
+![CI/CD Pipeline](./docs/cicd_pipeline.png)
+
+### 3. Rust Unit Test Output (6 Passing Tests)
 Both contracts are validated by Cargo unit tests:
 ![Cargo Test Output](./docs/test_output.png)
 
