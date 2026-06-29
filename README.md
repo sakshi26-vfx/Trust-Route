@@ -145,12 +145,12 @@ This script will:
 
 Copy the outputted Contract IDs into [soroban.ts](file:///d:/stellar%20TrustRoute/frontend/src/lib/soroban.ts) to interact with them on-chain.
 
-### 🌐 Live Testnet Contract Addresses & Interactions
+### 🌐 Live Testnet Contract Addresses & Interactions (Stellar Expert Explorer Links)
 
-* **Router Contract ID**: `CBUQYDFIRQVPP7HCJXCEPSJIXYFM7H3G6A3BFF2G3OWNLEX36MD4LL33`
-* **Escrow Contract ID**: `CDXT2IWU2MSMSUUJ3QPFY44XM5MMXQC64RG44GH6ITFDKBBGXIWWPKMM`
-* **Arbiter Admin Address**: `GA4VG5HLJKMNB5D4SX5PVCUTAJN7BE2XQMJGBPGJB5R2IIR5ZMMQOVDQ`
-* **Contract Interaction Transaction Hash (Testnet)**: `2fb6942a997e6e7b1ad0bc1a35339cee261ae3e932cdda95c062dbb5e2c66fc8`
+* **Router Contract ID**: [`CBUQYDFIRQVPP7HCJXCEPSJIXYFM7H3G6A3BFF2G3OWNLEX36MD4LL33`](https://stellar.expert/explorer/testnet/contract/CBUQYDFIRQVPP7HCJXCEPSJIXYFM7H3G6A3BFF2G3OWNLEX36MD4LL33)
+* **Escrow Contract ID**: [`CDXT2IWU2MSMSUUJ3QPFY44XM5MMXQC64RG44GH6ITFDKBBGXIWWPKMM`](https://stellar.expert/explorer/testnet/contract/CDXT2IWU2MSMSUUJ3QPFY44XM5MMXQC64RG44GH6ITFDKBBGXIWWPKMM)
+* **Arbiter Admin Address**: [`GA4VG5HLJKMNB5D4SX5PVCUTAJN7BE2XQMJGBPGJB5R2IIR5ZMMQOVDQ`](https://stellar.expert/explorer/testnet/account/GA4VG5HLJKMNB5D4SX5PVCUTAJN7BE2XQMJGBPGJB5R2IIR5ZMMQOVDQ)
+* **Contract Interaction Transaction Hash**: [`2fb6942a997e6e7b1ad0bc1a35339cee261ae3e932cdda95c062dbb5e2c66fc8`](https://stellar.expert/explorer/testnet/tx/2fb6942a997e6e7b1ad0bc1a35339cee261ae3e932cdda95c062dbb5e2c66fc8)
 
 ---
 
@@ -166,7 +166,13 @@ The dashboard layout adapts cleanly to fit mobile resolutions:
 Our workflow automatically validates the workspace smart contract tests on push:
 ![CI/CD Pipeline](./docs/cicd_pipeline.png)
 
-### 3. Rust Unit Test Output (6 Passing Tests)
+### 3. 📜 Official Proof of Deployed Smart Contract on Stellar Testnet Explorer
+Below is the verified live on-chain contract overview from **Stellar Expert Explorer** showing active ledger state, contract ID (`CDXT2IWU...`), and WASM footprint:
+
+![Official Testnet Contract Proof](./docs/deployed_contract_testnet.png)
+> 🔗 **Live Explorer Verification**: [Click here to inspect Escrow Contract on Stellar Expert Testnet](https://stellar.expert/explorer/testnet/contract/CDXT2IWU2MSMSUUJ3QPFY44XM5MMXQC64RG44GH6ITFDKBBGXIWWPKMM)
+
+### 4. Rust Unit Test Output (6 Passing Tests)
 Both contracts are validated by Cargo unit tests:
 ![Cargo Test Output](./docs/test_output.png)
 
